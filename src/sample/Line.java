@@ -1,38 +1,37 @@
 package sample;
 
+import javafx.scene.effect.ColorInput;
+import javafx.scene.paint.Color;
+
+import java.util.LinkedList;
+
 /**
- * Created by jared_000 on 7/17/2016.
+ * Created by jared_000 on 7/18/2016.
  */
 public class Line {
-    double slope;
-    double intercept;
-    DataPoint begining;
-    DataPoint end;
+    LinkedList<LineSegment> lineMl = new LinkedList<>();
+    LinkedList<DataPoint> dataMl = new LinkedList<>();
+    Color color;
+    String file;
+    boolean used = true;
 
-    public Line(DataPoint beginingInput, DataPoint endInput) {
-        begining = beginingInput;
-        end = endInput;
-
-        calcSlope();
-        calcIntercept();
+    public Line(Color colorInput) {
+        color = colorInput;
+        dataMl.add(new DataPoint(0, 0));
     }
 
-    public Line(double x, double y, double xOne, double yOne) {
-        begining = new DataPoint(x, y);
-        end = new DataPoint(xOne, yOne);
+    public LineSegment findSegmentContaining(double xPos) {
+        for (int i = 0; i < lineMl.size(); i++) {
+            if (lineMl.get(i).begining.x <= xPos && lineMl.get(i).end.x >= xPos) {
+                return lineMl.get(i);
+            }
+        }
 
-        calcSlope();
-        calcIntercept();
+        return new LineSegment(0, 0, 0, 0);
     }
 
-    public void calcSlope() {
-        slope = (begining.x - end.x)/(begining.y-end.y);
-    }
-
-    public void calcIntercept() {
-        intercept = (slope*begining.x)+begining.y;
-    }
-    public double yAt(double xPosition) {
-        return (xPosition*slope)+intercept;
+    public void newDataPoint(double x, double y) {
+        lineMl.add(new LineSegment(dataMl.get(dataMl.size() - 1), new DataPoint(x, y)));
+        dataMl.add(new DataPoint(x, y));
     }
 }
